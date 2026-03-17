@@ -1,9 +1,57 @@
-#include<stdio.h>
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+#include "headers/structure.h"
 #include "headers/lostItem.h"
 
 void reportLostItem(){
-    printf("Working in Progress Result soon");
+    
+    Item newItem;
+    FILE *fp;
+
+    printf("\n--- Report a Lost Item ---\n");
+
+    newItem.id = (int)time(NULL); 
+
+    // 2. Details Input (Spaces ke liye underscore '_' use karna)
+    printf("Enter Item Name (e.g., Black_HP_Laptop): ");
+    scanf("%s", newItem.itemName);
+    
+    printf("Enter Category (e.g., Electronics): ");
+    scanf("%s", newItem.category);
+    
+    printf("Where did you lose it? (Last seen location): ");
+    scanf("%s", newItem.location);
+    
+    printf("Date Lost (DD/MM/YYYY): ");
+    scanf("%s", newItem.date);
+    
+    // Security Question for Verification later [cite: 60, 170]
+    printf("Security Question: Give a unique identification mark on it?\nAnswer: ");
+    scanf("%s", newItem.claimAnswer);
+
+    // Status set kar rahe hain
+    strcpy(newItem.status, "LOST");
+
+    // 3. File Handling: lost_records.txt mein append mode ('a') mein save [cite: 54, 161]
+    fp = fopen("lost_records.txt", "a");
+    
+    if (fp == NULL) {
+        printf("Error: Lost database file nahi khul rahi!\n");
+        return;
+    }
+
+    // CSV Format: ID,Name,Category,Location,Date,Status,SecurityAnswer 
+    fprintf(fp, "%d,%s,%s,%s,%s,%s,%s\n", 
+            newItem.id, newItem.itemName, newItem.category, 
+            newItem.location, newItem.date, newItem.status, newItem.claimAnswer);
+
+    fclose(fp);
+
+    printf("\n[SUCCESS] Lost item reported! Save this Item ID: %d\n", newItem.id);
 }
+
+
 void searchLostItem(){
     printf("Working in Progress Result soon");
 }

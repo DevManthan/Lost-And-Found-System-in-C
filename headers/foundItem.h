@@ -1,5 +1,5 @@
-#ifndef LOSTFOUND_H
-#define LOSTFOUND_H
+#ifndef FOUNDITEM_H
+#define FOUNDITEM_H
 
 void getFoundRecords();
 

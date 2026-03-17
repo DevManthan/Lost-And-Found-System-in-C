@@ -1,5 +1,6 @@
-#ifndef LOSTFOUND_H
-#define LOSTFOUND_H
+#ifndef LOSTITEM_H
+#define LOSTITEM_H
+#include "structure.h"
 
 void reportLostItem();
 void searchLostItem();

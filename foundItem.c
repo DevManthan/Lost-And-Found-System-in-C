@@ -1,6 +1,7 @@
 #include<stdio.h>
-#include "headers/lostItem.h"
+#include "headers/foundItem.h"
+#include "headers/structure.h"
 
 void getFoundRecords(){
-    printf("SHwoing all found item records , soon");
+    printf("Shwoing all found item records , soon");
 }
