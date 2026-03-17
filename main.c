@@ -1,5 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include "headers/lostItem.h"
+#include "headers/foundItem.h"
 
 int main(){
 
@@ -22,15 +24,19 @@ int main(){
         {
         case 1:
             printf("Reporting\n");
+            reportLostItem();
             break;
         case 2:
             printf("checking\n");
+            searchLostItem();
             break;
         case 3:
             printf("records\n");
+            getFoundRecords();
             break;
         case 4:
             printf("records\n");
+            getLostRecords();
             break;
         case 5:
             printf("exit\n");
