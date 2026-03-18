@@ -55,6 +55,32 @@ void reportLostItem(){
 void searchLostItem(){
     printf("Working in Progress Result soon");
 }
+
 void getLostRecords(){
-    printf("Showing all lost items Soon");
+
+    Item tempItem;
+    FILE *fp = fopen("lost_records.txt", "r"); // Reading mode mein file kholi 
+
+    if (fp == NULL) {
+        printf("\n[!] No lost records found (File doesn't exist yet).\n");
+        return;
+    }
+
+    printf("\n================================ ALL LOST RECORDS ================================\n");
+    printf("%-12s | %-15s | %-12s | %-15s | %-10s\n", "ID", "Item Name", "Category", "Location", "Date");
+    printf("----------------------------------------------------------------------------------\n");
+
+    // File se data line by line read karna (CSV Format: ID,Name,Cat,Loc,Date,Status,Answer) 
+    while (fscanf(fp, "%d,%[^,],%[^,],%[^,],%[^,],%[^,],%[^\n]\n", 
+           &tempItem.id, tempItem.itemName, tempItem.category, 
+           tempItem.location, tempItem.date, tempItem.status, tempItem.claimAnswer) != EOF) 
+    {
+        // Table format mein print karna
+        printf("%-12d | %-15s | %-12s | %-15s | %-10s\n", 
+               tempItem.id, tempItem.itemName, tempItem.category, 
+               tempItem.location, tempItem.date);
+    }
+
+    printf("==================================================================================\n");
+    fclose(fp);
 }
