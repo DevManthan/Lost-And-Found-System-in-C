@@ -15,20 +15,20 @@ void reportLostItem(){
 
     // 2. Details Input (Spaces ke liye underscore '_' use karna)
     printf("Enter Item Name (e.g., Black_HP_Laptop): ");
-    scanf("%s", newItem.itemName);
+    scanf(" %[^\n]", newItem.itemName);
     
     printf("Enter Category (e.g., Electronics): ");
-    scanf("%s", newItem.category);
+    scanf(" %[^\n]", newItem.category);
     
     printf("Where did you lose it? (Last seen location): ");
-    scanf("%s", newItem.location);
+    scanf(" %[^\n]", newItem.location);
     
     printf("Date Lost (DD/MM/YYYY): ");
-    scanf("%s", newItem.date);
+    scanf(" %[^\n]", newItem.date);
     
     // Security Question for Verification later [cite: 60, 170]
     printf("Security Question: Give a unique identification mark on it?\nAnswer: ");
-    scanf("%s", newItem.claimAnswer);
+    scanf(" %[^\n]", newItem.claimAnswer);
 
     // Status set kar rahe hain
     strcpy(newItem.status, "LOST");
