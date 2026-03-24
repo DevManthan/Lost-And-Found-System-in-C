@@ -14,10 +14,11 @@ int main(){
         printf("=====================================\n");
         printf("Enter your Choice : \n");
         printf("1. Report Lost item \n");
-        printf("2. Check for lost item \n");
-        printf("3. Check found Records\n");
-        printf("4. Check lost Records\n");
-        printf("5. Exit\n");
+        printf("2. report found item \n");
+        printf("3. search and claim \n");
+        printf("4. Check found Records\n");
+        printf("5. Check lost Records\n");
+        printf("6. Exit\n");
         scanf("%d", &ch);
 
         switch (ch)
@@ -27,18 +28,21 @@ int main(){
             reportLostItem();
             break;
         case 2:
-            printf("checking\n");
-            searchLostItem();
+            printf("saving\n");
+            reportFoundItem();
             break;
         case 3:
+            printf(" searching and matching\n");
+            searchAndClaim();
+        case 4:
             printf("records\n");
             getFoundRecords();
             break;
-        case 4:
+        case 5:
             printf("records\n");
             getLostRecords();
             break;
-        case 5:
+        case 6:
             printf("exit\n");
             exit(0);
             break;

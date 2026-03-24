@@ -2,5 +2,7 @@
 #define FOUNDITEM_H
 
 void getFoundRecords();
+void reportFoundItem();
+void searchAndClaim();
 
 #endif
