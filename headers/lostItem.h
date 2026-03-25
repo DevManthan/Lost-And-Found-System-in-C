@@ -3,7 +3,6 @@
 #include "structure.h"
 
 void reportLostItem();
-void searchLostItem();
 void getLostRecords();
 
 #endif
