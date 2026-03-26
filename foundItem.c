@@ -1,8 +1,23 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <ctype.h>
 #include "headers/foundItem.h"
 #include "headers/structure.h"
+
+#define RED "\x1B[31m"
+#define RESET "\x1B[0m"
+
+void toLowerCase(char *dest, const char *src)
+{
+    int i = 0;
+    while (src[i] != '\0')
+    {
+        dest[i] = tolower(src[i]); // Har character ko chhota kar raha hai
+        i++;
+    }
+    dest[i] = '\0'; // String close karna zaroori hai
+}
 
 void reportFoundItem()
 {
@@ -26,25 +41,14 @@ void reportFoundItem()
     printf("Date Lost (DD/MM/YYYY): ");
     scanf(" %[^\n]", newItem.date);
 
-    // Security Question for Verification later [cite: 60, 170]
-    strcpy(newItem.claimAnswer, "NA");
-
-    // Status set kar rahe hain
     strcpy(newItem.status, "FOUND");
 
-    // 3. File Handling: found_records.txt mein save hoga
     fp = fopen("found_records.txt", "a");
 
-    if (fp == NULL)
-    {
-        printf("Error: found database file nahi khul rahi!\n");
-        return;
-    }
-
     // CSV Format: ID,Name,Category,Location,Date,Status,SecurityAnswer
-    fprintf(fp, "%d,%s,%s,%s,%s,%s,%s\n",
+    fprintf(fp, "%d,%s,%s,%s,%s,%s\n",
             newItem.id, newItem.itemName, newItem.category,
-            newItem.location, newItem.date, newItem.status, newItem.claimAnswer);
+            newItem.location, newItem.date, newItem.status);
 
     fclose(fp);
 
@@ -58,7 +62,7 @@ void getFoundRecords()
 
     if (fp == NULL)
     {
-        printf("\n[!] No lost records found (File doesn't exist yet).\n");
+        printf(RED "\n[!] No found records found (OR File doesn't exist yet.)" RESET "\n");
         return;
     }
 
@@ -67,9 +71,9 @@ void getFoundRecords()
     printf("----------------------------------------------------------------------------------\n");
 
     // File se data line by line read karna (CSV Format: ID,Name,Cat,Loc,Date,Status,Answer)
-    while (fscanf(fp, "%d,%[^,],%[^,],%[^,],%[^,],%[^,],%[^\n]\n",
+    while (fscanf(fp, "%d,%[^,],%[^,],%[^,],%[^,],%[^\n]\n",
                   &tempItem.id, tempItem.itemName, tempItem.category,
-                  tempItem.location, tempItem.date, tempItem.status, tempItem.claimAnswer) != EOF)
+                  tempItem.location, tempItem.date, tempItem.status) != EOF)
     {
         // Table format mein print karna
         printf("%-12d | %-15s | %-12s | %-15s | %-10s\n",
@@ -83,7 +87,7 @@ void getFoundRecords()
 
 void searchAndClaim()
 {
-    char keyword[50];
+    char keyword[50], tempSearch[50], tempNameLower[50], tempCatLower[50];
     Item tempItem;
     int found = 0;
     FILE *fp;
@@ -92,20 +96,29 @@ void searchAndClaim()
     printf("Enter Item Name or Category to search: ");
     scanf("%s", keyword);
 
+    toLowerCase(tempSearch, keyword);
+
     printf("\n================================ SEARCH RESULTS ==================================\n");
     printf("%-12s | %-15s | %-12s | %-10s | %-10s\n", "ID", "Item Name", "Category", "Status", "Date");
     printf("----------------------------------------------------------------------------------\n");
 
     // --- STEP 1: LOST FILE MEIN DHUNDO ---
     fp = fopen("lost_records.txt", "r");
-    if (fp != NULL) {
-        while (fscanf(fp, "%d,%[^,],%[^,],%[^,],%[^,],%[^,],%[^\n]\n", 
-               &tempItem.id, tempItem.itemName, tempItem.category, 
-               tempItem.location, tempItem.date, tempItem.status, tempItem.claimAnswer) != EOF) {
-            
-            if (strstr(tempItem.itemName, keyword) != NULL || strstr(tempItem.category, keyword) != NULL) {
+    if (fp != NULL)
+    {
+        while (fscanf(fp, "%d,%[^,],%[^,],%[^,],%[^,],%[^\n]\n",
+                      &tempItem.id, tempItem.itemName, tempItem.category,
+                      tempItem.location, tempItem.date, tempItem.status) != EOF)
+        {
+
+            // File se jo Item Name aur Category mili, uski Lowercase copy banao
+            toLowerCase(tempNameLower, tempItem.itemName);
+            toLowerCase(tempCatLower, tempItem.category);
+
+            if (strstr(tempNameLower, tempSearch) != NULL || strstr(tempCatLower, tempSearch) != NULL)
+            {
                 // Status (LOST) column ke sath print karo
-                printf("%-12d | %-15s | %-12s | %-10s | %-10s\n", 
+                printf("%-12d | %-15s | %-12s | %-10s | %-10s\n",
                        tempItem.id, tempItem.itemName, tempItem.category, tempItem.status, tempItem.date);
                 found = 1;
             }
@@ -115,14 +128,19 @@ void searchAndClaim()
 
     // --- STEP 2: FOUND FILE MEIN DHUNDO ---
     fp = fopen("found_records.txt", "r");
-    if (fp != NULL) {
-        while (fscanf(fp, "%d,%[^,],%[^,],%[^,],%[^,],%[^,],%[^\n]\n", 
-               &tempItem.id, tempItem.itemName, tempItem.category, 
-               tempItem.location, tempItem.date, tempItem.status, tempItem.claimAnswer) != EOF) {
-            
-            if (strstr(tempItem.itemName, keyword) != NULL || strstr(tempItem.category, keyword) != NULL) {
+    if (fp != NULL)
+    {
+        while (fscanf(fp, "%d,%[^,],%[^,],%[^,],%[^,],%[^\n]\n",
+                      &tempItem.id, tempItem.itemName, tempItem.category,
+                      tempItem.location, tempItem.date, tempItem.status) != EOF)
+        {
+            toLowerCase(tempNameLower, tempItem.itemName);
+            toLowerCase(tempCatLower, tempItem.category);
+
+            if (strstr(tempNameLower, tempSearch) != NULL || strstr(tempCatLower, tempSearch) != NULL)
+            {
                 // Status (FOUND) column ke sath print karo
-                printf("%-12d | %-15s | %-12s | %-10s | %-10s\n", 
+                printf("%-12d | %-15s | %-12s | %-10s | %-10s\n",
                        tempItem.id, tempItem.itemName, tempItem.category, tempItem.status, tempItem.date);
                 found = 1;
             }
@@ -130,7 +148,8 @@ void searchAndClaim()
         fclose(fp);
     }
 
-    if (!found) {
+    if (!found)
+    {
         printf("\n             NO MATCHING ITEMS FOUND FOR: %s\n", keyword);
     }
     printf("==================================================================================\n");
