@@ -1,3 +1,4 @@
 1774522494,brascelet,Fashion,ground,13/04/3035,LOST
 1774522519,tshirt,fashion,sports arena,15/06/5067,LOST
 1774523213,l,l,l,l,LOST
+1774538347,grey laptop,electronics,college cafe,12/3/2026,LOST
