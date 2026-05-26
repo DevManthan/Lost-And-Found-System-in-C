@@ -6,6 +6,7 @@
 #include "headers/structure.h"
 
 #define RED "\x1B[31m"
+#define GREEN "\x1B[32m"
 #define RESET "\x1B[0m"
 
 void toLowerCase(char *dest, const char *src)
@@ -165,7 +166,7 @@ void claimby_id(int id)
 Item lostItem,foundItem, bestMatch;
 int lostFound=0, matchFound=0;
 int bestFound =-1;
-int best
+int bestFoundID;
 FILE *fp;
 
 fp = fopen("lost_records.txt","r");
