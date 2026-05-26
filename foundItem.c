@@ -88,7 +88,7 @@ void getFoundRecords()
     scanf("%c", &ch);
 
     if(ch == 'y' || ch == 'Y')
-        searchAndClaim();
+        search();
 
     fclose(fp);
     printf("Want to Claim? [y/n]");
@@ -100,7 +100,7 @@ void getFoundRecords()
 
 }
 
-void searchAndClaim()
+void search()
 {
     char keyword[50], tempSearch[50], tempNameLower[50], tempCatLower[50];
     Item tempItem;
@@ -153,4 +153,6 @@ void searchAndClaim()
     if(ch == 'y' || ch == 'Y')
        printf("Enter Lost Record ID : ");
        scanf("%d", &id);
+
+    
 }
