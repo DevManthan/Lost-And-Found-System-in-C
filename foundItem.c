@@ -163,10 +163,11 @@ void search()
 
 void claimby_id(int id)
 {
+Item temp;
 Item lostItem,foundItem, bestMatch;
 int lostFound=0, matchFound=0;
 int bestFound =-1;
-int bestFoundID;
+
 FILE *fp;
 
 fp = fopen("lost_records.txt","r");
@@ -314,7 +315,7 @@ if (lostFound==0) {
                   temp.date,
                   temp.status) != EOF) {
 // agr temp.id is equal to lost item id toh vo skip ho jayega baki write ho jayega  
-        if (temp.id != lostItem.id) {
+        if (ltemp.id != lostItem.id) {
 
             fprintf(ltmp,
                     "%d,%s,%s,%s,%s,%s\n",
