@@ -57,6 +57,8 @@ void reportFoundItem()
 
 void getFoundRecords()
 {
+    char ch;
+    int id;
     Item tempItem;
     FILE *fp = fopen("found_records.txt", "r"); // Reading mode mein file kholi
 
@@ -82,15 +84,30 @@ void getFoundRecords()
     }
 
     printf("==================================================================================\n");
+    printf("Want to search an item ? [y/n]");
+    scanf("%c", &ch);
+
+    if(ch == 'y' || ch == 'Y')
+        search();
+
     fclose(fp);
+    printf("Want to Claim? [y/n]");
+    scanf("%c", &ch);
+
+    if(ch == 'y' || ch == 'Y')
+       printf("Enter Lost Record ID : ");
+       scanf("%d", &id);
+
 }
 
-void searchAndClaim()
+void search()
 {
     char keyword[50], tempSearch[50], tempNameLower[50], tempCatLower[50];
     Item tempItem;
     int found = 0;
     FILE *fp;
+    int id;
+    char ch;
 
     printf("\n--- GLOBAL SEARCH ---\n");
     printf("Enter Item Name or Category to search: ");
@@ -102,31 +119,7 @@ void searchAndClaim()
     printf("%-12s | %-15s | %-12s | %-10s | %-10s\n", "ID", "Item Name", "Category", "Status", "Date");
     printf("----------------------------------------------------------------------------------\n");
 
-    // --- STEP 1: LOST FILE MEIN DHUNDO ---
-    fp = fopen("lost_records.txt", "r");
-    if (fp != NULL)
-    {
-        while (fscanf(fp, "%d,%[^,],%[^,],%[^,],%[^,],%[^\n]\n",
-                      &tempItem.id, tempItem.itemName, tempItem.category,
-                      tempItem.location, tempItem.date, tempItem.status) != EOF)
-        {
-
-            // File se jo Item Name aur Category mili, uski Lowercase copy banao
-            toLowerCase(tempNameLower, tempItem.itemName);
-            toLowerCase(tempCatLower, tempItem.category);
-
-            if (strstr(tempNameLower, tempSearch) != NULL || strstr(tempCatLower, tempSearch) != NULL)
-            {
-                // Status (LOST) column ke sath print karo
-                printf("%-12d | %-15s | %-12s | %-10s | %-10s\n",
-                       tempItem.id, tempItem.itemName, tempItem.category, tempItem.status, tempItem.date);
-                found = 1;
-            }
-        }
-        fclose(fp);
-    }
-
-    // --- STEP 2: FOUND FILE MEIN DHUNDO ---
+    // ---  FOUND FILE MEIN DHUNDO ---
     fp = fopen("found_records.txt", "r");
     if (fp != NULL)
     {
@@ -145,6 +138,7 @@ void searchAndClaim()
                 found = 1;
             }
         }
+    
         fclose(fp);
     }
 
@@ -153,8 +147,14 @@ void searchAndClaim()
         printf("\n             NO MATCHING ITEMS FOUND FOR: %s\n", keyword);
     }
     printf("==================================================================================\n");
+    printf("Want to Claim? [y/n]");
+    scanf("%c", &ch);
 
-    // TODO NEXT: Agar koi item FOUND dikh raha hai, toh user ko ID daal kar "Claim" karne ka option de sakte hain.
+    if(ch == 'y' || ch == 'Y')
+       printf("Enter Lost Record ID : ");
+       scanf("%d", &id);
+
+    
 }
 
 
