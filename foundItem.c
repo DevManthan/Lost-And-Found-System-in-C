@@ -156,3 +156,220 @@ void searchAndClaim()
 
     // TODO NEXT: Agar koi item FOUND dikh raha hai, toh user ko ID daal kar "Claim" karne ka option de sakte hain.
 }
+
+
+
+
+void claimby_id(int id)
+{
+Item lostItem,foundItem, bestMatch;
+int lostFound=0, matchFound=0;
+int bestFound =-1;
+int best
+FILE *fp;
+
+fp = fopen("lost_records.txt","r");
+//id dhoodh rha agr  fie khali hui 
+if (fp == NULL) {
+    printf("File nahi mili!\n");
+    return;
+}
+
+while (fscanf(fp, "%d,%[^,],%[^,],%[^,],%[^,],%[^\n]\n",
+              &lostItem.id,
+              lostItem.itemName,
+              lostItem.category,
+              lostItem.location,
+              lostItem.date,
+              lostItem.status) != EOF) {
+
+    // Sirf ID check kar rha 
+    if (lostItem.id == id) {
+        lostFound = 1;
+        break;  // Mil gayi! Sari info already lostItem mein save hai
+    }
+}
+
+fclose(fp);
+//agrr nahi mili id toh 
+if (lostFound==0) {
+        printf(RED "\n[!] Invalid ID! no item is there .\n" RESET);
+        return;
+}
+ // ── STEP 3: Lost item details dikhao ──
+
+    printf("\n========== LOST ITEM ==========\n");
+
+    printf("ID       : %d\n", lostItem.id);
+    printf("Name     : %s\n", lostItem.itemName);
+    printf("Category : %s\n", lostItem.category);
+    printf("Location : %s\n", lostItem.location);
+    printf("Date     : %s\n", lostItem.date);
+
+    printf("================================\n");
+
+    printf("\n[INFO] Found database mein matching item search ho raha hai...\n");
+
+    // ── STEP 4: Matching ke liye lowercase conversion krdiya ──
+
+    char lNameL[50], lCatL[30], lLocL[50];
+    char fNameL[50], fCatL[30], fLocL[50];
+
+    toLowerCase(lNameL, lostItem.itemName);
+    toLowerCase(lCatL,  lostItem.category);
+    toLowerCase(lLocL,  lostItem.location);
+
+    // ── STEP 5: Found records mein match search karha ──
+
+    fp = fopen("found_records.txt", "r");
+
+    if (fp == NULL) {
+        printf(RED "\n[!] Found records file nahi mili.\n" RESET);
+        return;
+    }
+
+    while (fscanf(fp,
+                  "%d,%[^,],%[^,],%[^,],%[^,],%[^\n]\n",
+                  &foundItem.id,
+                  foundItem.itemName,
+                  foundItem.category,
+                  foundItem.location,
+                  foundItem.date,
+                  foundItem.status) != EOF) {
+
+        toLowerCase(fNameL, foundItem.itemName);
+        toLowerCase(fCatL,  foundItem.category);
+        toLowerCase(fLocL,  foundItem.location);
+
+        // Name + Category + Location match karha 
+
+        if (strcmp(lNameL, fNameL) == 0 &&    
+            strcmp(lCatL,  fCatL)  == 0 &&
+            strcmp(lLocL,  fLocL)  == 0) {
+
+            matchFound = 1;
+
+            bestMatch = foundItem;  // best match variable mai founditem ko store kara diya 
+
+            bestFoundID = foundItem.id; // found item ki id ko best found item mai store kar diya 
+
+            break;
+        }
+    }
+
+    fclose(fp);
+
+    // ── STEP 6: Match nahi mila ──
+
+    if (matchFound==0) {
+
+        printf(RED "\n[!] Item abhi tak found records mein nahi mila.\n" RESET);
+
+        printf("    Baad mein dobara check karo.\n");
+
+        return;
+    }
+
+    // ── STEP 7: Match mil gaya ──
+
+    printf(GREEN "\n========== MATCH FOUND ==========\n" RESET);
+
+    printf("Found Record ID : %d\n", bestMatch.id);
+    printf("Name            : %s\n", bestMatch.itemName);
+    printf("Category        : %s\n", bestMatch.category);
+    printf("Location        : %s\n", bestMatch.location);
+    printf("Date            : %s\n", bestMatch.date);
+
+    printf("=================================\n");
+
+    // ── STEP 8: User confirmation karha 
+
+    char confirm;
+
+    printf("\nKya yeh tumhara item hai? (y/n): ");
+
+    scanf(" %c", &confirm);
+
+    if (confirm != 'y' && confirm != 'Y') {
+
+        printf("\nTheek hai. Record unchanged rahega.\n");
+
+
+        return;
+    }
+
+    // ── STEP 9: Lost records se item delete karha ──
+
+    FILE *lt = fopen("lost_records.txt", "r");
+    FILE *ltemp = fopen("lost_temp.txt", "w");
+
+// scan kar rha read kara original file ko store kardiya temporary file
+    while (fscanf(lt,
+                  "%d,%[^,],%[^,],%[^,],%[^,],%[^\n]\n",
+                  &temp.id,
+                  temp.itemName,
+                  temp.category,
+                  temp.location,
+                  temp.date,
+                  temp.status) != EOF) {
+// agr temp.id is equal to lost item id toh vo skip ho jayega baki write ho jayega  
+        if (temp.id != lostItem.id) {
+
+            fprintf(ltmp,
+                    "%d,%s,%s,%s,%s,%s\n",
+                    temp.id,
+                    temp.itemName,
+                    temp.category,
+                    temp.location,
+                    temp.date,
+                    temp.status);
+        }
+    }
+
+    fclose(lt);
+    fclose(ltmp);
+
+    remove("lost_records.txt");
+
+    rename("lost_temp.txt", "lost_records.txt");
+
+    // ── STEP 10: Found records se matched item delete karo ──
+
+    FILE *ft = fopen("found_records.txt", "r");
+    FILE *ftmp = fopen("found_temp.txt", "w");
+
+    while (fscanf(ft,
+                  "%d,%[^,],%[^,],%[^,],%[^,],%[^\n]\n",
+                  &tmp.id,
+                  tmp.itemName,
+                  tmp.category,
+                  tmp.location,
+                  tmp.date,
+                  tmp.status) != EOF) {
+
+        if (tmp.id != bestFoundID) {
+
+            fprintf(ftmp,
+                    "%d,%s,%s,%s,%s,%s\n",
+                    tmp.id,
+                    tmp.itemName,
+                    tmp.category,
+                    tmp.location,
+                    tmp.date,
+                    tmp.status);
+        }
+    }
+
+    fclose(ft);
+    fclose(ftmp);
+
+    remove("found_records.txt");
+
+    rename("found_temp.txt", "found_records.txt");
+
+    // ── STEP 11: Success message ──
+
+    printf(GREEN "\n[SUCCESS] Item successfully claimed!\n" RESET);
+
+    printf("Lost aur Found records is updated.\n");
+}
