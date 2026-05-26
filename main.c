@@ -20,11 +20,9 @@ int main()
         printf("=====================================\n");
         printf("Enter your Choice : \n");
         printf("1. Report Lost item \n");
-        printf("2. report found item \n");
-        printf("3. Search Item Globally \n");
-        printf("4. View Lost items\n");
-        printf("5. View Found items\n");
-        printf("6. Exit\n");
+        printf("2. Report found item \n");
+        printf("3. View Found items\n");
+        printf("4. Exit\n");
         printf("------------------------------------\n");
         printf("Choice : ");
         // Agar number ki jagah alphabet daala
@@ -45,15 +43,9 @@ int main()
             reportFoundItem();
             break;
         case 3:
-            searchAndClaim();
-            break;
-        case 4:
-            getLostRecords();
-            break;
-        case 5:
             getFoundRecords();
             break;
-        case 6:
+        case 4:
             printf(RED "----------EXIT----------" RESET "\n");
             exit(0);
         default:
